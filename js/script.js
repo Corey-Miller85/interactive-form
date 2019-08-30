@@ -46,7 +46,7 @@ $('#design').on('change', () => {
                 $(element).hide();
             } else if ($(element).val() === 'cornflowerblue') { // jumps noSelect and marks the next as selected by default.
                 $(element).show();
-                $(element).attr('selected', 'selected');
+                $(element).attr('selected', true);
             } else if ($(element).val() === 'darkslategrey' || 'gold') { //shows the rest of the colors.
                 $(element).show();
             } else {
