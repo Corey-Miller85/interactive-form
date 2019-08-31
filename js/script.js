@@ -7,51 +7,84 @@ const textBoxLabel = $('<label id="text-box-label" for="text-box">Other Job Role
 const textBox = $('<input type="text" id="text-box" name="title-textbox"></input>');
 $('.firstField').append(textBoxLabel);
 $('.firstField').append(textBox);
-$('#text-box-label').hide();
-$('#text-box').hide();
+$('#text-box-label').attr('hidden',true);
+$('#text-box').attr('hidden', true);
 $('#title').on('change', () =>{
     if ($('#title').val() === 'other') {
-        $('#text-box-label').show();
-        $('#text-box').show();
+        $('#text-box-label').removeAttr("hidden");
+        $('#text-box').removeAttr("hidden");
     } else {
-        $('#text-box-label').hide();
-        $('#text-box').hide();
+        $('#text-box-label').attr('hidden',true);
+        $('#text-box').attr('hidden',true);
     }
 });
 
 
 // when no design is choosen, select color to be noSelection
 $(document).ready( () => {
-     const noSelection = $('<option selected value="noSelect">Please Make a Selection</option>');
+     const noSelection = $('<option value="no-design-selection" selected=true>Please Select a Design</option>');
     $('#color option').each(function (index, element) {
-        $(element).hide();
+        $(element).attr('hidden', true);
     });
     $('#color').prepend(noSelection);
 });
 
 //checks to see if there is a selection, and chooses correct color
-$('#design').on('change', () => {
-    //creates "please select a design" in color box element
-    const noSelection = $('<option selected value="noSelect">Please Make a Selection</option>');
-        //if design shows "select theme" loop through color options and hide them then append the option Please choose, and select it.
-    if ($('#design').val() === "Select Theme") {
-        $('#color option').each(function(index, element){
-            $(element).hide();
-        });
-        $('#color').prepend(noSelection);
-    } else if ($('#design').val() === "js puns") {
-        //if a design is selected, show the color options, hide the choose design option, and then select a valid color.
+$('#design').on('change', (e) => {
+    const eTarget = $(e.target)
+    console.log(eTarget.val());
+
+    $('#design option').each((index, element) => {
+        $(element).removeAttr('selected');
+    });
+    $('#color option').each((index, element) => {
+        $(element).removeAttr('selected');
+    });
+
+    if (eTarget.val() === 'select theme') {
         $('#color option').each(function (index, element) {
-            if ($(element).val() === "noSelect") {
-                $(element).hide();
-            } else if ($(element).val() === 'cornflowerblue') { // jumps noSelect and marks the next as selected by default.
-                $(element).show();
-                $(element).attr('selected', 'selected');
-            } else if ($(element).val() === 'darkslategrey' || 'gold') { //shows the rest of the colors.
-                $(element).show();
-            } else {
-                $(element).hide();
-            }
+            $(this).attr('hidden',true);
         });
-    }
+        $('option[value="select theme"]').attr('selected', true);
+
+        
+    } else if (eTarget.val() === 'js puns') {
+              $('#color option').each(function (index, element) {
+                  console.log($(element).val());
+                $(element).attr('hidden', false);
+                if ($(element).val() === "no-design-selection") {
+                    $(element).attr('hidden', true);
+                } else if ($(element).val() === "cornflowerblue") {
+                    $(this).attr('hidden', false);
+                    $(this).attr('selected',true);
+                } else if ($(element).val() === "darkslategrey" || $(element).val() === "gold") {
+                    $(this).attr('hidden', false);
+                } else if ($(element).val() === "tomato" || $(element).val() === "steelblue" || $(element).val() === "dimgrey") {
+                    $(this).attr('hidden', true);
+                }
+              });
+              $('option[value="js puns"]').attr('selected', true);
+
+    } else if (eTarget.val() === 'heart js') {
+         $('#color option').each(function (index, element) {
+             console.log($(element).val());
+             $(element).attr('hidden', false);
+             if ($(element).val() === "no-design-selection") {
+                $(element).attr('hidden', true);
+             } else if ($(element).val() === "cornflowerblue" || $(element).val() === "darkslategrey" || $(element).val() === "gold") {
+                $(this).attr('hidden', true);
+             } else if ($(element).val() === "tomato") { 
+                $(this).attr('hidden', false);
+                $(this).attr('selected', true);
+            } else if ($(element).val() === "steelblue" || $(element).val() === "dimgrey") {
+                $(this).attr('hidden', false);
+             }
+         });
+        $('option[value="heart js"]').attr('selected', true);
+    } 
 });
+
+
+
+
+
