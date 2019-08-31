@@ -33,37 +33,35 @@ $(document).ready( () => {
 $('#design').on('change', (e) => {
     const eTarget = $(e.target)
     console.log(eTarget.val());
-
     $('#design option').each((index, element) => {
         $(element).removeAttr('selected');
     });
     $('#color option').each((index, element) => {
         $(element).removeAttr('selected');
     });
-
     if (eTarget.val() === 'select theme') {
         $('#color option').each(function (index, element) {
             $(this).attr('hidden',true);
         });
-        $('option[value="select theme"]').attr('selected', true);
-
-        
+        $('option[value="select theme"]').attr('selected', true); 
+    
+        //assigns correct colors to JS puns
     } else if (eTarget.val() === 'js puns') {
-              $('#color option').each(function (index, element) {
-                  console.log($(element).val());
-                $(element).attr('hidden', false);
-                if ($(element).val() === "no-design-selection") {
-                    $(element).attr('hidden', true);
-                } else if ($(element).val() === "cornflowerblue") {
-                    $(this).attr('hidden', false);
-                    $(this).attr('selected',true);
-                } else if ($(element).val() === "darkslategrey" || $(element).val() === "gold") {
-                    $(this).attr('hidden', false);
-                } else if ($(element).val() === "tomato" || $(element).val() === "steelblue" || $(element).val() === "dimgrey") {
-                    $(this).attr('hidden', true);
-                }
-              });
-              $('option[value="js puns"]').attr('selected', true);
+        $('#color option').each(function (index, element) {
+            $(element).attr('hidden', false);
+            if ($(element).val() === "no-design-selection") {
+                $(element).attr('hidden', true);
+            } else if ($(element).val() === "cornflowerblue") {
+                $(this).attr('hidden', false);
+                $(this).attr('selected',true);
+            } else if ($(element).val() === "darkslategrey" || $(element).val() === "gold") {
+                $(this).attr('hidden', false);
+            } else if ($(element).val() === "tomato" || $(element).val() === "steelblue" || $(element).val() === "dimgrey") {
+                $(this).attr('hidden', true);
+            }
+        });
+    $('option[value="js puns"]').attr('selected', true);
+        //assigns correct colors to heart js
 
     } else if (eTarget.val() === 'heart js') {
          $('#color option').each(function (index, element) {
@@ -87,4 +85,23 @@ $('#design').on('change', (e) => {
 
 
 
+// ***********************************
+// ***   Register for Activities   ***
+// ***********************************
+
+
+////if JavaScript Frameworks Workshop is chosen block Express workshop.
+$('.activities').on('change', (e) => {
+    if ($('input[name="js-frameworks"').prop("checked")) {
+        $('input[name="express"').prop({
+            disabled: true
+        });
+    } 
+    if ($('input[name="express"').prop("checked")) {
+        $('input[name="js-frameworks"').prop({
+            disabled: true
+        });
+    }
+     
+});
 
