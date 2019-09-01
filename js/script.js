@@ -1,5 +1,10 @@
 
 
+
+// ***********************************
+// ***      Name Field             ***
+// ***********************************
+
 //name entry field focus
 $('#name').focus();
 //text box if other is selected
@@ -20,12 +25,13 @@ $('#title').on('change', () =>{
 });
 
 
+// ***********************************
+// ***      Design Field           ***
+// ***********************************
 
 // when no design is choosen, select color to be noSelection
 $(document).ready( () => {
-     const noSelection = $('<option value="no-design-selection" selected=true>Please Select a Design</option>');
-    $('option[value="Credit Card"]').prop('selected', true)
-
+    const noSelection = $('<option value="no-design-selection" selected=true>Please Select a Design</option>');
     $('#color option').each(function (index, element) {
         $(element).attr('hidden', true);
     });
@@ -89,6 +95,7 @@ $('#design').on('change', (e) => {
 // ***********************************
 // ***   Register for Activities   ***
 // ***********************************
+
 let totalCost = 0;
 //if total cost is greater than zero show total at bottom of fieldset
 
@@ -179,5 +186,32 @@ function cost(element) {
     return parseInt(array);
 }
 
+// ***********************************
+// ***      Payment Options        ***
+// ***********************************
+
+$('option[value="select method"]').prop('disabled',true);
 
 
+function paymentInfo(target) {
+    if (target === "Credit Card") {
+        $('.credit-card').prop("hidden", false);
+        $('#paypal').prop("hidden", true);
+        $('#bitcoin').prop("hidden", true);
+    }
+    if (target === "PayPal") {
+        $('#credit-card').prop("hidden", true);
+        $('#paypal').prop("hidden", false);
+        $('#bitcoin').prop("hidden", true);
+    }
+    if (target === "Bitcoin") {
+        $('#credit-card').prop("hidden", true);
+        $('#paypal').prop("hidden", true);
+        $('#bitcoin').prop("hidden", false);
+    }
+}
+
+
+$('#payment').on('change', (e) => {
+    paymentInfo($(e.target).val())
+});
