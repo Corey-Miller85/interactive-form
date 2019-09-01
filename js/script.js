@@ -20,9 +20,12 @@ $('#title').on('change', () =>{
 });
 
 
+
 // when no design is choosen, select color to be noSelection
 $(document).ready( () => {
      const noSelection = $('<option value="no-design-selection" selected=true>Please Select a Design</option>');
+    $('option[value="Credit Card"]').prop('selected', true)
+
     $('#color option').each(function (index, element) {
         $(element).attr('hidden', true);
     });
@@ -32,7 +35,6 @@ $(document).ready( () => {
 //checks to see if there is a selection, and chooses correct color
 $('#design').on('change', (e) => {
     const eTarget = $(e.target)
-    console.log(eTarget.val());
     $('#design option').each((index, element) => {
         $(element).removeAttr('selected');
     });
@@ -65,7 +67,6 @@ $('#design').on('change', (e) => {
 
     } else if (eTarget.val() === 'heart js') {
          $('#color option').each(function (index, element) {
-             console.log($(element).val());
              $(element).attr('hidden', false);
              if ($(element).val() === "no-design-selection") {
                 $(element).attr('hidden', true);
@@ -88,20 +89,95 @@ $('#design').on('change', (e) => {
 // ***********************************
 // ***   Register for Activities   ***
 // ***********************************
+let totalCost = 0;
+//if total cost is greater than zero show total at bottom of fieldset
 
+const totalAmountText = $(`<p>Total Cost of Package: $0</p>`)
+$('.activities').append(totalAmountText);
 
 ////if JavaScript Frameworks Workshop is chosen block Express workshop.
-$('.activities').on('change', (e) => {
-    if ($('input[name="js-frameworks"').prop("checked")) {
-        $('input[name="express"').prop({
-            disabled: true
-        });
-    } 
-    if ($('input[name="express"').prop("checked")) {
-        $('input[name="js-frameworks"').prop({
-            disabled: true
-        });
+$('.activities').change( (e) => {
+
+    //create easier selectors
+    const jsFrameworks = $('input[name="js-frameworks"]');
+    const express = $('input[name="express"]');
+    const node = $('input[name="node"]');
+    const jsLibs = $('input[name="js-libs"]');
+    const conference = $('input[name="all"]');
+    const buildTools = $('input[name="build-tools"]');
+    const npm = $('input[name="npm"]');
+//if the target is the correlating box , disable conflicting check boxes and add cost to total cost variable;
+    if ($(e.target).prop("name") === 'js-frameworks' && jsFrameworks.is(":checked")) {
+        disable(express);
+        totalCost += cost(jsFrameworks);
+    } else if ($(e.target).prop("name") === 'js-frameworks' && !jsFrameworks.is(":checked")){
+        enable(express);
+        totalCost -= cost(jsFrameworks);
     }
-     
+    if ($(e.target).prop("name") === 'express' && express.is(":checked")) {
+        disable(jsFrameworks);
+        totalCost += cost(express);
+    } else if ($(e.target).prop("name") === 'express' && !express.is(":checked"))  {
+        enable(jsFrameworks);
+        totalCost -= cost(express);
+    }
+
+    if ($(e.target).prop("name") === 'node' && node.is(":checked")) {
+        disable(jsLibs);
+        totalCost += cost(node);
+    } else if ($(e.target).prop("name") === 'node' && !node.is(":checked")){
+        enable(jsLibs);
+        totalCost -= cost(node);
+    }
+
+    if ($(e.target).prop("name") === 'js-libs' && jsLibs.is(":checked")) {
+        disable(node);
+        totalCost += cost(jsLibs);
+    } else if ($(e.target).prop("name") === 'js-libs' && !jsLibs.is(":checked")){
+        enable(node);
+        totalCost -= cost(jsLibs);
+
+    }
+
+    if ($(e.target).prop("name") === 'build-tools' && buildTools.is(":checked")) {
+        totalCost += cost(buildTools);
+    } else if ($(e.target).prop("name") === 'build-tools' && !buildTools.is(":checked")) {
+        totalCost -= cost(buildTools);
+
+
+    }
+    if ($(e.target).prop("name") === 'npm' && npm.is(":checked")) {
+        totalCost += cost(npm);
+    } else if ($(e.target).prop("name") === 'npm' && !npm.is(":checked")){
+        totalCost -= cost(npm);
+
+    }
+
+    if ($(e.target).prop("name") === 'all' && conference.is(":checked")) {
+        totalCost += cost(conference);
+    } else if ($(e.target).prop("name") === 'all' && !conference.is(":checked")) {
+        totalCost -= cost(conference);
+    }
+    $(totalAmountText).html(`Total Cost of Package: $${totalCost}`);
 });
+
+
+
+//helper functions to refactor code.
+function disable(element) {
+    element.prop('disabled', true);
+    element.prop('checked', false);
+}
+
+function enable(element) {
+    element.prop('disabled', false);
+
+}
+// takes the data-cost property, splits into array, chooses 2nd element, parses the inter from string.
+function cost(element) {
+    const array = element.attr('data-cost').split('$')[1];
+    return parseInt(array);
+}
+
+
 
