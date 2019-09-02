@@ -215,3 +215,75 @@ function paymentInfo(target) {
 $('#payment').on('change', (e) => {
     paymentInfo($(e.target).val())
 });
+
+
+
+// ***********************************
+// ***      Form Validation        ***
+// ***********************************
+
+function validateName(user) {
+    let regex = /^[A-Za-z ?]+$/
+    return regex.test(user);
+}
+
+$('#name').on('keyup', () => {
+    const username = $('#name').val();
+    if (validateName(username) === false && username.length > 0) {
+        $('#name').css("border", "4px solid red")
+        return false
+    } else {
+        $('#name').css("border", "none")
+        return true    
+    }
+});
+
+
+
+function validateEmail(email) {
+    let regex = /^[A-Za-z\.\-\_]+@[A-Za-z\_\-\.]+$/
+    return regex.test(email);
+}
+
+$('#mail').on('keyup', () => {
+    const mailName = $('#mail').val();
+    if (validateEmail(mailName) === false && mailName.length > 0) {
+        $('#mail').css("border", "4px solid red")
+        return false
+    } else {
+        $('#mail').css("border", "none")
+        return true    
+    }
+});
+
+function validateActivities() {
+    $('input[type="checkbox"').each((index,element) => {
+     if ($(element).prop('checked') === false) {
+         console.log('false')
+        return false
+     } else {
+        console.log('true')
+        return true
+     }
+    });
+}
+
+$('.container').on('submit', (e) => {
+    if (validateActivities() === false) {
+        console.log('Nope!')
+        e.preventDefault();
+        return false
+    }
+});
+
+function validateCreditCard() {
+
+}
+
+function validateZip(){
+
+}
+
+function validateCVV(){
+
+}
