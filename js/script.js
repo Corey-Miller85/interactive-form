@@ -222,14 +222,14 @@ $('#payment').on('change', (e) => {
 // ***      Form Validation        ***
 // ***********************************
 
-function validateName(user) {
-    let regex = /^[A-Za-z ?]+$/
-    return regex.test(user);
+function validateName() {
+    const username = $('#name').val();
+    let regex = /^[A-Za-z]+$/
+    return regex.test(username);
 }
 
 $('#name').on('keyup', () => {
-    const username = $('#name').val();
-    if (validateName(username) === false && username.length > 0) {
+    if (validateName() === false && $('#name').val().length > 0) {
         $('#name').css("border", "4px solid red")
         return false
     } else {
@@ -240,17 +240,17 @@ $('#name').on('keyup', () => {
 
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
-function validateEmail(email) {
-    let regex = /[a-z]+/;
-    return regex.test(email);
+function validateEmail() {
+    const mailName = $('#mail').val();
+
+    let regex = /^[a-z]+/;
+    return regex.test(mailName);
 }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 
-
-
 $('#mail').on('keyup', () => {
     const mailName = $('#mail').val();
-    if (validateEmail(mailName) === false && mailName.length > 0) {
+    if (!validateEmail() && mailName.length > 0) {
         $('#mail').css("border", "4px solid red")
         return false
     } else {
@@ -272,7 +272,7 @@ function validateActivities() {
 
 function validateZip(){
     const zip = $('#zip').val();
-    let regex = /^[0-9]{4}$/;
+    let regex = /^[0-9]+$/;
     return regex.test(zip);
 }
 
@@ -314,23 +314,26 @@ $('.container').submit( (e) => {
 
 
 function masterValidate() {
-    if (validateName() === false) {
+    if (!validateName()) {
         return false;
     }
-    if (validateEmail() === false) {
+    if (!validateEmail()) {
         return false;
     }
-    if (validateActivities() === false) {
+    
+    if (!validateActivities()) {
         return false;
     }
-
     if ($('#payment').val() === 'Credit Card') {
-        if (validateCreditCardPayment() === false) {
+        if (!validateCreditCardPayment()) {
             return false;
         }
-    }
     return true
+    }
 }
+
+    
+
 
 
 function checkPayment() {
