@@ -239,11 +239,14 @@ $('#name').on('keyup', () => {
 });
 
 
-
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 function validateEmail(email) {
-    let regex = /^[A-Za-z\.\-\_]+@[A-Za-z\_\-\.]+$/
+    let regex = /[a-z]+/;
     return regex.test(email);
 }
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+
+
 
 $('#mail').on('keyup', () => {
     const mailName = $('#mail').val();
@@ -257,33 +260,85 @@ $('#mail').on('keyup', () => {
 });
 
 function validateActivities() {
-    $('input[type="checkbox"').each((index,element) => {
-     if ($(element).prop('checked') === false) {
-         console.log('false')
-        return false
-     } else {
-        console.log('true')
+    if ($('input[type="checkbox"]:checked').length > 0) {
         return true
-     }
-    });
-}
-
-$('.container').on('submit', (e) => {
-    if (validateActivities() === false) {
-        console.log('Nope!')
-        e.preventDefault();
+    } else {
+        $('.activities').css('border',' 3px solid red');
         return false
     }
-});
-
-function validateCreditCard() {
-
 }
 
-function validateZip(){
 
+
+function validateZip(){
+    const zip = $('#zip').val();
+    let regex = /^[0-9]{4}$/;
+    return regex.test(zip);
 }
 
 function validateCVV(){
+    const cvv = $('#cvv').val();
+    let regex = /[0-9]{3}/;
+    return regex.test(cvv);
+}
 
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+
+function validateCreditCard() {
+    const ccNumber = $('#cc-num').val();
+    let regex = /[0-9]+/;
+    return regex.test(ccNumber);
+}
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+
+
+function validateCreditCardPayment() {
+    if ($('#payment[value="Credit Card"]')){
+        if (validateCreditCard() === false){
+            return false;
+        }
+        if (validateCVV() === false){
+            return false;
+        }
+        if (validateZip() === false){
+            return false;
+        }
+        return true
+    } 
+
+}
+
+$('.container').submit( (e) => {
+ 
+});
+
+
+function masterValidate() {
+    if (validateName() === false) {
+        return false;
+    }
+    if (validateEmail() === false) {
+        return false;
+    }
+    if (validateActivities() === false) {
+        return false;
+    }
+
+    if ($('#payment').val() === 'Credit Card') {
+        if (validateCreditCardPayment() === false) {
+            return false;
+        }
+    }
+    return true
+}
+
+
+function checkPayment() {
+    if ($('#payment').val() === 'Credit Card') {
+        if (validateCreditCard()) {
+        console.log('worked')
+        } else {
+        console.log('didnt work')
+        }
+    }
 }
