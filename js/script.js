@@ -315,7 +315,7 @@ function loopInvalid() {
 
 function validateName() {
     const username = $('#name').val();
-    let regex = /^[A-Za-z]+$/
+    let regex = /[a-zA-Z\-'\s]+/gm;
     if (regex.test(username)){
         $('#name').removeClass('invalid');
         $('#name').addClass('valid');
@@ -344,7 +344,7 @@ $('#name').on('keyup', () => {
 
 function validateEmail() {
     const mailName = $('#mail').val();
-    let regex = /^[a-z]+/;
+    let regex = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+(.com|.net|.org|.edu)/;
     if (regex.test(mailName)) {
         $('#mail').removeClass('invalid');
         $('#mail').addClass('valid');
@@ -384,7 +384,7 @@ function validateActivities() {
 
 function validateZip(){
     const zip = $('#zip').val();
-    let regex = /^[0-9]+$/;
+    let regex = /^[0-9]{5}$/;
     if (regex.test(zip)) {
         $('#zip').removeClass('invalid');
         $('#zip').addClass('valid');
@@ -417,7 +417,7 @@ function validateCVV(){
 
 function validateCreditCard() {
     const ccNumber = $('#cc-num').val();
-    let regex = /[0-9]+/;
+    let regex = /[0-9]{13,16}/;
     if (regex.test(ccNumber)) {
         $('#cc-num').removeClass('invalid');
         $('#cc-num').addClass('valid');
