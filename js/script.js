@@ -32,6 +32,7 @@ $('#title').on('change', () =>{
 
 // when no design is choosen, select color to be noSelection
 $(document).ready( () => {
+    $('#payment option[value="Credit Card"]').prop('selected', true)
     const noSelection = $('<option value="no-design-selection" selected=true>Please Select a Design</option>');
     $('#color option').each(function (index, element) {
         $(element).attr('hidden', true);
