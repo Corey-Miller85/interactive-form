@@ -222,64 +222,117 @@ $('#payment').on('change', (e) => {
 // ***      Form Validation        ***
 // ***********************************
 
+function invalidClass() {
+    $('.invalid').css('background', 'red');
+}
+
+function validClass() {
+    $('.valid').css('background', '');
+}
+
+// ***********************************
+// ***      Name Validation        ***
+// ***********************************
+
+
 function validateName() {
     const username = $('#name').val();
     let regex = /^[A-Za-z]+$/
-    return regex.test(username);
+    if (regex.test(username)){
+        $('#name').removeClass('invalid');
+        $('#name').addClass('valid');
+        validClass();
+        return true;
+    } else {
+        $('#name').removeClass('valid');
+        $('#name').addClass('invalid');
+        invalidClass();
+        return false;
+    }
 }
 
 $('#name').on('keyup', () => {
     if (validateName() === false && $('#name').val().length > 0) {
-        $('#name').css("border", "4px solid red")
-        return false
+        return false;
     } else {
-        $('#name').css("border", "none")
-        return true    
+        return true;  
     }
 });
 
+// ***********************************
+// ***      Mail Validation        ***
+// ***********************************
 
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
+
 function validateEmail() {
     const mailName = $('#mail').val();
-
     let regex = /^[a-z]+/;
-    return regex.test(mailName);
+    if (regex.test(mailName)) {
+        $('#mail').removeClass('invalid');
+        $('#mail').addClass('valid');
+        validClass();
+        return true;
+    } else {
+        $('#mail').removeClass('valid');
+        $('#mail').addClass('invalid');
+        invalidClass();
+        return false;
+    }
 }
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 
 $('#mail').on('keyup', () => {
     const mailName = $('#mail').val();
     if (!validateEmail() && mailName.length > 0) {
-        $('#mail').css("border", "4px solid red")
-        return false
+        return false;
     } else {
-        $('#mail').css("border", "none")
-        return true    
+        return true;   
     }
 });
 
 function validateActivities() {
     if ($('input[type="checkbox"]:checked').length > 0) {
-        return true
+        $('.activities').removeClass('invalid');
+        $('.activities').addClass('valid');
+        validClass();
+        return true;
     } else {
-        $('.activities').css('border',' 3px solid red');
-        return false
+        
+        $('.activities').addClass('invalid');
+        $('.activities').removeClass('valid');
+        invalidClass();
+        return false;
     }
 }
-
-
 
 function validateZip(){
     const zip = $('#zip').val();
     let regex = /^[0-9]+$/;
-    return regex.test(zip);
-}
+    if (regex.test(zip)) {
+        $('#zip').removeClass('invalid');
+        $('#zip').addClass('valid');
+        validClass();
+        return true;
+    } else {
+        $('#zip').removeClass('valid');
+        $('#zip').addClass('invalid');
+        invalidClass();
+        return false;
+    }}
 
 function validateCVV(){
     const cvv = $('#cvv').val();
     let regex = /[0-9]{3}/;
-    return regex.test(cvv);
+    if (regex.test(cvv)) {
+        $('#cvv').removeClass('invalid');
+        $('#cvv').addClass('valid');
+        validClass();
+        return true;
+    } else {
+        $('#cvv').removeClass('valid');
+        $('#cvv').addClass('invalid');
+        invalidClass();
+        return false;
+    }
 }
 
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
@@ -287,41 +340,57 @@ function validateCVV(){
 function validateCreditCard() {
     const ccNumber = $('#cc-num').val();
     let regex = /[0-9]+/;
-    return regex.test(ccNumber);
+    if (regex.test(ccNumber)) {
+        $('#cc-num').removeClass('invalid');
+        $('#cc-num').addClass('valid');
+        validClass();
+        return true;
+    } else {
+        $('#cc-num').removeClass('valid');
+        $('#cc-num').addClass('invalid');
+        invalidClass();
+        return false;
+    }
 }
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!//
 
 
 function validateCreditCardPayment() {
     if ($('#payment[value="Credit Card"]')){
-        if (validateCreditCard() === false){
+        if (!validateCreditCard()){
+            validateCVV();
+            validateZip();
             return false;
         }
-        if (validateCVV() === false){
+        if (!validateCVV()){
+            validateZip();
             return false;
         }
-        if (validateZip() === false){
+        if (!validateZip()){
             return false;
         }
         return true
     } 
-
 }
 
-$('.container').submit( (e) => {
- 
-});
 
 
+ // checks all validations 
 function masterValidate() {
     if (!validateName()) {
+        validateEmail();
+        validateActivities();
+        validateCreditCardPayment();
         return false;
     }
     if (!validateEmail()) {
+        validateActivities();
+        validateCreditCardPayment();
         return false;
     }
     
     if (!validateActivities()) {
+        validateCreditCardPayment();
         return false;
     }
     if ($('#payment').val() === 'Credit Card') {
@@ -332,16 +401,11 @@ function masterValidate() {
     }
 }
 
-    
-
-
-
-function checkPayment() {
-    if ($('#payment').val() === 'Credit Card') {
-        if (validateCreditCard()) {
-        console.log('worked')
-        } else {
-        console.log('didnt work')
-        }
-    }
-}
+//prevents submit if any validations return false
+$('form').submit((e) => {
+   if (!masterValidate()) {
+       e.preventDefault();
+       return false
+   }
+   return true
+});
