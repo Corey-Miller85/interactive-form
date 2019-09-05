@@ -6,21 +6,23 @@
 // ***********************************
 
 //name entry field focus
+$('.activities').prop('id', 'activities') //remove This
 $('#name').focus();
+
+
+
+
+
+// ***********************************
+// ***      Job Title Field             ***
+// ***********************************
 //text box if other is selected
-const textBoxLabel = $('<label id="text-box-label" for="text-box">Other Job Role:</label>');
-const textBox = $('<input type="text" id="text-box" name="title-textbox"></input>');
-$('.firstField').append(textBoxLabel);
-$('.firstField').append(textBox);
-$('#text-box-label').attr('hidden',true);
-$('#text-box').attr('hidden', true);
+$('.other').attr('hidden',true);
 $('#title').on('change', () =>{
     if ($('#title').val() === 'other') {
-        $('#text-box-label').removeAttr("hidden");
-        $('#text-box').removeAttr("hidden");
+        $('.other').removeAttr("hidden");
     } else {
-        $('#text-box-label').attr('hidden',true);
-        $('#text-box').attr('hidden',true);
+        $('.other').attr('hidden',true);
     }
 });
 
@@ -222,12 +224,75 @@ $('#payment').on('change', (e) => {
 // ***      Form Validation        ***
 // ***********************************
 
+//creates the error message
+function createErrorMessage(targetID, string) {
+    const errorMessage= document.createElement('p')
+    errorMessage.textContent = string
+    errorMessage.className = "errorMess"
+    $(targetID).after(errorMessage);
+    $('.errorMess').css('text-align','right');
+    $('.errorMess').css('margin-top','0px');
+    $('.errorMess').css('color','red');
+}
+
+// iterate through all elements with class of invalid, and assign error message. 
+function loopInvalid() {
+    $('.invalid').each((index, element) => {
+        if ($(element).prop('id') === 'name'){
+            if ($('#name').next().text() === 'Invalid Name') {
+
+            } else {
+                createErrorMessage('#name','Invalid Name')
+            }
+        }
+        if ($(element).prop('id') === 'mail'){
+            if ($('#mail').next().text() === 'Invalid Email Address') {
+            } else {
+                createErrorMessage('#mail',"Invalid Email Address")
+            }
+        }
+        if ($(element).prop('id') === 'activities'){
+            if ($('#activities').next().text() === 'Please Choose at least 1') {
+            } else {
+                createErrorMessage('#activities', "Please Choose at least 1")
+            }
+        }
+        if ($(element).prop('id') === 'cc-num'){
+            if ($('#cc-num').next().text() === 'Invalid Credit Card number') {
+            } else {
+                createErrorMessage('#cc-num','Invalid Credit Card number')
+            }
+        }
+        if ($(element).prop('id') === 'zip'){
+            if ($('#zip').next().text() === 'Invalid Zip Code') {
+            } else {
+                createErrorMessage('#zip', 'Invalid Zip Code')
+            }
+        }
+        if ($(element).prop('id') === 'cvv'){
+            if ($('#cvv').next().text() === 'Invalid Card verification value') {
+            } else {
+            createErrorMessage('#cvv', 'Invalid Card verification value')
+            }
+        }
+    });
+}
+
+function clearError() {
+    $('.valid').each(( index, element ) => {
+        if ($(element).next().prop('tagName') === "P") {
+            $(element).next().remove();
+        }
+    });
+}
+
 function invalidClass() {
-    $('.invalid').css('background', 'red');
+    $('.invalid').css('border-bottom','3px solid red' );
 }
 
 function validClass() {
-    $('.valid').css('background', '');
+    $('.valid').css('border-bottom', '3px solid green');
+    clearError();
 }
 
 // ***********************************
@@ -396,15 +461,20 @@ function masterValidate() {
     if ($('#payment').val() === 'Credit Card') {
         if (!validateCreditCardPayment()) {
             return false;
+        } else {
+            return true
         }
-    return true
+    } else {
+        return true
     }
 }
 
 //prevents submit if any validations return false
 $('form').submit((e) => {
+    loopInvalid();
    if (!masterValidate()) {
        e.preventDefault();
+       loopInvalid();
        return false
    }
    return true
