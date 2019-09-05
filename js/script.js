@@ -6,7 +6,6 @@
 // ***********************************
 
 //name entry field focus
-$('.activities').prop('id', 'activities') //remove This
 $('#name').focus();
 
 
@@ -97,12 +96,30 @@ $('#design').on('change', (e) => {
 // ***********************************
 // ***   Register for Activities   ***
 // ***********************************
+$('.activities').prop('id', 'activities') 
 
 let totalCost = 0;
 //if total cost is greater than zero show total at bottom of fieldset
 
 const totalAmountText = $(`<p>Total Cost of Package: $0</p>`)
 $('.activities').append(totalAmountText);
+
+//helper functions to refactor code.
+function disable(element) {
+    element.prop('disabled', true);
+    element.prop('checked', false);
+}
+
+//clears disabled property when called
+function enable(element) {
+    element.prop('disabled', false);
+
+}
+// takes the data-cost property, splits into array, chooses 2nd element, parses the inter from string.
+function cost(element) {
+    const array = element.attr('data-cost').split('$')[1];
+    return parseInt(array);
+}
 
 ////if JavaScript Frameworks Workshop is chosen block Express workshop.
 $('.activities').change( (e) => {
@@ -172,21 +189,7 @@ $('.activities').change( (e) => {
 
 
 
-//helper functions to refactor code.
-function disable(element) {
-    element.prop('disabled', true);
-    element.prop('checked', false);
-}
 
-function enable(element) {
-    element.prop('disabled', false);
-
-}
-// takes the data-cost property, splits into array, chooses 2nd element, parses the inter from string.
-function cost(element) {
-    const array = element.attr('data-cost').split('$')[1];
-    return parseInt(array);
-}
 
 // ***********************************
 // ***      Payment Options        ***
@@ -194,7 +197,7 @@ function cost(element) {
 
 $('option[value="select method"]').prop('disabled',true);
 
-
+//hides credit card information if payment is not credit card
 function paymentInfo(target) {
     if (target === "Credit Card") {
         $('.credit-card').prop("hidden", false);
@@ -213,7 +216,7 @@ function paymentInfo(target) {
     }
 }
 
-
+// gets value of Payment info on change event
 $('#payment').on('change', (e) => {
     paymentInfo($(e.target).val())
 });
@@ -235,7 +238,32 @@ function createErrorMessage(targetID, string) {
     $('.errorMess').css('color','red');
 }
 
+//fucntion to clear error text
+function clearError() {
+    $('.valid').each(( index, element ) => {
+        if ($(element).next().prop('tagName') === "P") {
+            $(element).next().remove();
+        }
+    });
+}
+
+//assigns red bar under invalid fields
+//assigns error text
+function invalidClass() {
+    $('.invalid').css('border-bottom','3px solid red' );
+    loopInvalid();
+}
+
+
+//assigns green bar under valid fields
+//also clears error text
+function validClass() {
+    $('.valid').css('border-bottom', '3px solid green');
+    clearError();
+}
+
 // iterate through all elements with class of invalid, and assign error message. 
+// if there is already an error message, does not repeat creation
 function loopInvalid() {
     $('.invalid').each((index, element) => {
         if ($(element).prop('id') === 'name'){
@@ -278,22 +306,7 @@ function loopInvalid() {
     });
 }
 
-function clearError() {
-    $('.valid').each(( index, element ) => {
-        if ($(element).next().prop('tagName') === "P") {
-            $(element).next().remove();
-        }
-    });
-}
 
-function invalidClass() {
-    $('.invalid').css('border-bottom','3px solid red' );
-}
-
-function validClass() {
-    $('.valid').css('border-bottom', '3px solid green');
-    clearError();
-}
 
 // ***********************************
 // ***      Name Validation        ***
@@ -335,12 +348,12 @@ function validateEmail() {
     if (regex.test(mailName)) {
         $('#mail').removeClass('invalid');
         $('#mail').addClass('valid');
-        validClass();
+        validClass(); //marks class as valid
         return true;
     } else {
         $('#mail').removeClass('valid');
         $('#mail').addClass('invalid');
-        invalidClass();
+        invalidClass(); //marks class as invalid for error assignment
         return false;
     }
 }
